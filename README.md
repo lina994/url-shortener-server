@@ -17,6 +17,12 @@ File location: `url-shortener-server` directory
 
 ```
 PORT = your_port
+DB_NAME = your_database_name
+DB_USER = your_database_username
+DB_PASSWORD = your_database_password
+DB_HOST = your_database_host
+DB_PORT = your_database_port
+NODE_ENV = development (or production)
 ```
 
 ### Available Scripts
@@ -24,6 +30,11 @@ PORT = your_port
 #### `npm start`
 
 ## API
+
+### Redirect
+
+GET /:shortLink
+
 
 ### Shorten a url
 
