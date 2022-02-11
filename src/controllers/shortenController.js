@@ -8,11 +8,12 @@ class ShortenController {
     if (!req.query.shortLink) {
       return next(ApiError.badRequest('shortLink required'));
     }
-    if (!isValidShortLink(req.query.shortLink)) {
+    const slug = req.query.shortLink.split('/').pop();
+    if (!isValidShortLink(slug)) {
       return next(ApiError.badRequest('Illegal character in shortLink or wrong shortLink length'));
     }
     try {
-      let id = shortLinkToId(req.query.shortLink);
+      let id = shortLinkToId(slug);
       const record = await ShortLink.findByPk(id);
       if (!record) {
         return next(ApiError.badRequest("shortLink doesn't exist"));
@@ -33,6 +34,7 @@ class ShortenController {
         url: req.body.longUrl
       });
       let shortLink = idToShortLink(record.id);
+      shortLink = `${req.get('host')}/${shortLink}`;
       record.dataValues.shortLink = shortLink;
       res.json(record);
     } catch(e) {
