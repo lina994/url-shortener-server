@@ -1,5 +1,13 @@
 # URL shortener Server
 
+## Server Deploy
+
+https://url-2-link.herokuapp.com/
+
+## Client Code
+
+https://github.com/lina994/url-shortener-client
+
 ## Quick Start
 
 ### Download Server
@@ -35,6 +43,8 @@ NODE_ENV = development (or production)
 
 GET /:shortLink
 
+Example: 
+  - url: https://url-2-link.herokuapp.com/aaaab
 
 ### Shorten a url
 
@@ -53,6 +63,14 @@ Response:
 }
 ```
 
+Example: 
+  - url: https://url-2-link.herokuapp.com/api/shorten
+  - body: 
+    {
+      "longUrl": "https://www.google.com"
+    }
+
+
 ### Retrieve a url
 
 GET /api/shorten/{shortLink}
@@ -64,4 +82,8 @@ Response:
   "id": "",
   "longUrl": "string"
 ```
+
+Example: 
+  - url: https://url-2-link.herokuapp.com/api/shorten?shortLink=aaaab
+
 
