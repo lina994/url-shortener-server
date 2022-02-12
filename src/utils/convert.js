@@ -28,7 +28,7 @@ function _symbolToNum(c) {
 }
 
 // Function to get id (number) from a short link (string)
-export function shortLinkToId(shortLink) {
+export function slugToId(shortLink) {
   return shortLink.split('').reduce((prev, c) => _symbolToNum(c) + prev * BASE, 0);
 }
 

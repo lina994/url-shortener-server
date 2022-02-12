@@ -1,11 +1,17 @@
 import Router from 'express';
-import shortenRouter from './shortenRouter.js';
-import RedirectController from '../controllers/redirectController.js'
+import userRouter from './userRouter.js';
+import shortLinkRouter from './shortLinkRouter.js';
+import customShortLinkRouter from './customShortLinkRouter.js';
+import redirectController from '../controllers/redirectController.js'
 
 const router = new Router();
-router.use('/api/shorten', shortenRouter);
+router.use('/api/user', userRouter);
+router.use('/api/shorten', shortLinkRouter);
 
-router.get('/:shortLink', RedirectController.redirect);
+router.use('/api/custom/shorten', customShortLinkRouter);
+
+router.get('/r/:slug', redirectController.redirect);
+router.get('/:slug', redirectController.redirectCustomLink);
 
 export default router;
 

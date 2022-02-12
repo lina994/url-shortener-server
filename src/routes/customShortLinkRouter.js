@@ -1,11 +1,12 @@
 import Router from 'express';
-import ShortenController from '../controllers/shortenController.js';
+import authMiddleware from '../middlewares/authMiddleware.js';
+import customShortLinkController from '../controllers/customShortLinkController.js';
 import ApiError from '../errors/apiError.js';
 
 const router = new Router();
 
-router.get('/', ShortenController.getLongUrl);
-router.post('/', ShortenController.shortenLink);
+router.get('/', customShortLinkController.getLongUrl);
+router.post('/', authMiddleware, customShortLinkController.shortenLink);
 
 router.put('/', function (req, res, next) {
   next(ApiError.notImplemented("not implemented"));

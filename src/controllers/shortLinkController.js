@@ -1,19 +1,19 @@
-import { idToShortLink, shortLinkToId } from '../utils/convert.js'
-import { isValidShortLink } from '../utils/validation.js'
+import { idToShortLink, slugToId } from '../utils/convert.js';
+import { isValidShortLink } from '../utils/validation.js';
 import { ShortLink } from '../models.js';
 import ApiError from '../errors/apiError.js';
 
-class ShortenController {
+class ShortLinkController {
   async getLongUrl(req, res, next) {
-    if (!req.query.shortLink) {
-      return next(ApiError.badRequest('shortLink required'));
+    const slug = req.query.slug;
+    if (!slug) {
+      return next(ApiError.badRequest('slug required'));
     }
-    const slug = req.query.shortLink.split('/').pop();
     if (!isValidShortLink(slug)) {
-      return next(ApiError.badRequest('Illegal character in shortLink or wrong shortLink length'));
+      return next(ApiError.badRequest('Illegal character in slug or wrong slug length'));
     }
     try {
-      let id = shortLinkToId(slug);
+      let id = slugToId(slug);
       const record = await ShortLink.findByPk(id);
       if (!record) {
         return next(ApiError.badRequest("shortLink doesn't exist"));
@@ -34,7 +34,7 @@ class ShortenController {
         url: req.body.longUrl
       });
       let shortLink = idToShortLink(record.id);
-      shortLink = `${req.get('host')}/${shortLink}`;
+      shortLink = `${req.get('host')}/r/${shortLink}`;
       record.dataValues.shortLink = shortLink;
       res.json(record);
     } catch(e) {
@@ -45,5 +45,5 @@ class ShortenController {
 }
 
 
-export default new ShortenController();
+export default new ShortLinkController();
 
