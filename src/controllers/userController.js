@@ -60,6 +60,30 @@ class UserController {
     }
   }
 
+  async updatePassword(req, res, next) {
+    const { password, newPassword } = req.body;
+    if (!password || !newPassword) {
+      return next(ApiError.badRequest('Please enter current password and new password.'));
+    }
+    try {
+      let user = await User.findByPk(req.jwt.id);
+      if (!user) {
+        return next(ApiError.unauthorized("Invalid token"));
+      }
+      if (!bcrypt.compareSync(password, user.password)) {
+        return next(ApiError.badRequest('Incorrect Username or Password'));
+      }
+      const hashPassword = bcrypt.hashSync(password, 5);
+      user.password = hashPassword;
+      await user.save();
+      const token = generateJwt(user.id, user.username);
+      res.json({ token });
+    } catch(e) {
+      next(ApiError.internal(e.message));
+    }
+  }
+
+
   // TODO:
   // Delete user
   // Change password

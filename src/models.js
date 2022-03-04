@@ -13,7 +13,9 @@ export const User = sequelize.define('user', {
 export const CustomShortLink = sequelize.define('custom_short_link', {
   id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true, allowNull: false },
   url: { type: DataTypes.STRING, allowNull: false },
-  slug: { type: DataTypes.STRING, allowNull: false }
+  slug: { type: DataTypes.STRING, allowNull: false },
+  title: { type: DataTypes.STRING, allowNull: false },
+  clicks: { type: DataTypes.INTEGER, defaultValue: 0, allowNull: false }
 });
 
 export const ShortLink = sequelize.define('short_link', {

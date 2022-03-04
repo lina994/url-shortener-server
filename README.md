@@ -1,4 +1,28 @@
-# URL shortener Server
+
+<p align="center">
+  <img src="https://i.postimg.cc/Prk8YjVq/logo.png" alt="Logo" width="400"/>
+</p>
+
+<h1 align="center">
+  URL2Link - URL Shortener Server
+</h1>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/npm-v8.4.0-blue" alt="npm version"/>
+  <img src="https://img.shields.io/badge/node-v16.13.2-blue" alt="node version"/>
+  <img src="https://img.shields.io/badge/PostgreSQL-v14.2.1-blue" alt="PostgreSQL version"/>
+</p>
+
+- Link shorteners work by transforming any long URL into a shortened link.
+- When a user clicks the shortened link, they’re automatically forwarded to the destination URL.
+
+## Features
+
+- Create shortened links.
+- Sign-up, Log-in.
+- Custom links for authorized users. (create, update, delete).
+- Check the amount of clicks that your shortened url received. (authorized users)
+- redirect to destination URL.
 
 ## Server Deploy
 
@@ -67,11 +91,11 @@ Response:
 
 ```
 {
-  "id": "",
-  "url": "string"
-  "shortLink": "string"
-  "updatedAt"
-  "createdAt"
+  "id": "integer",
+  "url": "string",
+  "shortLink": "string",
+  "updatedAt": "Date",
+  "createdAt": "Date"
 }
 ```
 
@@ -97,7 +121,7 @@ Example:
   "url": "www.google.com",
   "updatedAt": "2022-02-12T08:14:06.014Z",
   "createdAt": "2022-02-12T08:14:06.014Z",
-  "shortLink": "url-2-link.herokuapp.com/r/aaaab"
+  "shortLink": "url-2-link.herokuapp.com/r/slug"
 }
 ```
 
@@ -112,18 +136,21 @@ Converts a long url to a custom short link.
 Request Body Schema:
 - longUrl, string (Required)
 - slug, string (Required)
+- title, string (optional)
 
 Response:
 
 ```
 {
+  "clicks": "int",
   "id": "int",
   "url": "string",
   "slug": "string",
-  "userId": "int"
-  "shortLink": "string"
-  "updatedAt"
-  "createdAt"
+  "title": "string",
+  "userId": "int",
+  "shortLink": "string",
+  "updatedAt": "date",
+  "createdAt" "date"
 }
 ```
 
@@ -136,7 +163,8 @@ body:
 ```
 {
   "longUrl": "https://www.google.com",
-  "slug": "aaaab"
+  "slug": "slug7",
+  "title": "google"
 }
 ```
 
@@ -144,9 +172,11 @@ response:
 
 ```
 {
+  "clicks": 0,
   "id": 7,
-  "url": "https://moovitapp.com/",
+  "url": "https://www.google.com",
   "slug": "slug7",
+  "title": "google",
   "updatedAt": "2022-02-12T09:24:09.615Z",
   "createdAt": "2022-02-12T09:24:09.608Z",
   "userId": 1,
@@ -166,8 +196,8 @@ Response:
 {
   "id": "int",
   "url": "string",
-  "createdAt",
-  "updatedAt"
+  "createdAt": "date",
+  "updatedAt": "date"
 }
 ```
 
@@ -196,7 +226,6 @@ Returns long url for the specified slug.
 Response:
 ```
 {
-  "id": "",
   "longUrl": "string"
 }
 ```
@@ -209,13 +238,128 @@ Repsonse:
 
 ```
 {
-  "id": 7,
-  "url": "https://moovitapp.com/",
-  "slug": "slug7",
-  "createdAt": "2022-02-12T09:24:09.608Z",
-  "updatedAt": "2022-02-12T09:24:09.615Z",
-  "userId": 1
+  "url": "https://moovitapp.com/"
 }
+```
+
+### Update custom link
+
+PUT /api/custom/shorten
+
+Update custom short link record.
+
+- Token (required)
+
+Request Body Schema:
+- id, integer (Required)
+- longUrl, string (optional)
+- slug, string (optional)
+- title, string (optional)
+
+Response:
+
+```
+{
+  "clicks": "int",
+  "id": "int",
+  "url": "string",
+  "slug": "string",
+  "title": "string",
+  "userId": "int",
+  "shortLink": "string",
+  "updatedAt": "date",
+  "createdAt" "date"
+}
+```
+
+Example: 
+
+url: https://url-2-link.herokuapp.com/api/custom/shorten
+
+body: 
+
+```
+{
+  "id": 4,
+  "longUrl": "https://www.google.com",
+  "slug": "slug7",
+  "title": "google"
+}
+```
+
+response:
+
+```
+{
+  "clicks": 0,
+  "id": 4,
+  "url": "https://www.google.com",
+  "slug": "slug7",
+  "title": "google",
+  "updatedAt": "2022-02-12T09:24:09.615Z",
+  "createdAt": "2022-02-14T09:24:09.608Z",
+  "userId": 1,
+  "shortLink": "url-2-link.herokuapp.com/slug7"
+}
+```
+
+
+### Delete custom link
+
+DELETE /api/custom/shorten/:slug
+
+Delete custom short link record.
+
+- Token (required)
+
+Example: 
+  - url: http://localhost:3001/api/custom/shorten/7
+
+
+### Dashboard
+
+GET /api/custom/dashborad
+
+Returns all user links.
+
+- Token (required)
+
+Response:
+
+```
+[
+  {
+    "id": "integer",
+    "url": "string",
+    "slug": "string",
+    "title": "string",
+    "clicks": "integer",
+    "createdAt": "date",
+    "updatedAt": "date",
+    "userId": "integer"
+  }
+]
+```
+
+Example: 
+
+url: https://url-2-link.herokuapp.com/api/custom/dashborad
+
+response:
+
+```
+[
+  {
+    "id": 3,
+    "url": "https://www.google.com/",
+    "slug": "slug2",
+    "title": "google",
+    "clicks": 0,
+    "createdAt": "2022-03-04T02:15:10.808Z",
+    "updatedAt": "2022-03-04T02:15:10.810Z",
+    "userId": 1
+  }
+]
 ```
 
 ### Registration
@@ -229,7 +373,7 @@ Request Body Schema:
 Response:
 ```
 {
-  "token": ""
+  "token": "string"
 }
 ```
 
@@ -295,5 +439,81 @@ Example:
   }
 ```
 
+### Update password
+
+PUT /api/user/password
+
+Update user password.
+
+- Token (required)
+
+Request Body Schema:
+- password, string (Required)
+- newPassword, string (Required)
+
+Response:
+```
+{
+  "token": "string"
+}
+```
+
+Example: 
+
+  request:
+
+  url: https://url-2-link.herokuapp.com/api/user/password
+
+  body: 
+
+```
+  {
+    "password": "pass1",
+    "newPassword": "pass211"
+  }
+```
+
+  response:
+
+```
+  {
+    "token": "eyJhbGci..."
+  }
+```
+
+
+## Database (sequelize)
+
+Associations:
+
+User.hasMany(CustomShortLink);
+CustomShortLink.belongsTo(User);
+
+### User (user)
+
+
+```
+  user.getCustom_short_links()
+  user.setCustom_short_links()
+  user.addCustom_short_links()
+  user.addCustom_short_link()
+  user.createCustom_short_link()
+  user.removeCustom_short_link()
+  user.removeCustom_short_links()
+  user.hasCustom_short_link()
+  user.hasCustom_short_links()
+  user.countCustom_short_links()
+```
+
+### CustomShortLink (custom_short_link)
+
+
+```
+custom_short_link.getUser()
+custom_short_link.setUser()
+custom_short_link.createUser()
+```
+
+### ShortLink (short_link)
 
 

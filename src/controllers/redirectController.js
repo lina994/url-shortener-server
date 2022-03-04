@@ -38,6 +38,8 @@ class RedirectController {
       if (!record) {
         return next(ApiError.notFound("This is a 404 error, which means you've clicked on a bad link or entered an invalid URL."));
       }
+      record.clicks = record.clicks + 1;
+      await record.save();
       const longUrl = record.url.startsWith('https://') ? record.url : 'https://' + record.url
       res.redirect(302, longUrl); // 301 is used for permanent redirecting
     } catch(e) {
